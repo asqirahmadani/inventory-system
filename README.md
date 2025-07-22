@@ -73,6 +73,8 @@ GET /v1/products/pagination?page=2&limit=10
 ```
 Response akan mengandung info page sebelumnya dan selanjutnya.
 
+---
+
 ## 🚀 Authentication Endpoint
 
 ### ✅ Login
@@ -119,6 +121,8 @@ Response akan mengandung info page sebelumnya dan selanjutnya.
 ```
 #### Error Response
 - 400 : bad request (password minimal 8 karakter serta mengandung huruf dan angka)
+
+---
 
 ## 🧑 Users Endpoint
 
@@ -271,6 +275,8 @@ Authorization: Bearer <access_token>
 - 401 : unauthorized (invalid token atau role tidak sesuai)
 - 404 : not found (invalid pagination)
 
+---
+
 ## 📊 Categorys Endpoint
 
 **Struktur Database Category (Prisma)**
@@ -380,6 +386,8 @@ Authorization: Bearer <access_token>
 - 400 : bad request (invalid categoryId)
 - 401 : unauthorized (invalid token)
 - 404 : not found (category tidak ditemukan)
+
+---
 
 ## 📦 Products Endpoint
 
@@ -524,6 +532,8 @@ Authorization: Bearer <access_token>
 - 401 : unauthorized (invalid token)
 - 404 : not found (product tidak ditemukan)
 
+---
+
 ## 🧾 Orders Endpoint
 
 **Struktur Database Order (Prisma)**
@@ -656,6 +666,8 @@ Authorization: Bearer <access_token>
 - 400 : bad request (invalid orderId)
 - 401 : unauthorized (invalid token atau role tidak sesuai)
 - 404 : not found (order tidak ditemukan)
+
+---
 
 ## 🛍️ Order Items Endpoint
 
