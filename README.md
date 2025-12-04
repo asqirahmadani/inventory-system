@@ -1,22 +1,25 @@
 # 📦 Inventory System API
 
-REST API backend untuk aplikasi Inventory System yang dibangun dengan Node.js, Express.js, dan Prisma ORM. API ini menangani autentikasi user, manajemen produk, kategori, serta sistem pemesanan (order).
+A clean and scalable RESTful API for managing products, categories, users, and orders.
+Built using Node.js, Express.js, Prisma ORM, and MySQL, this API is designed as a portfolio project demonstrating backend engineering, database design, authentication, and modular architecture.
 
 ## 📋 Table of Contents
 
-- [Teknologi yang Digunakan](#-teknologi-yang-digunakan)
-- [Fitur Utama](#-fitur-utama)
+- [Tech Stack](#-tech-stack)
+- [Features](#-features)
 - [Prerequisites](#-prerequisites)
-- [Instalasi](#-instalasi)
-- [Konfigurasi](#-konfigurasi)
-- [Menjalankan Aplikasi](#-menjalankan-aplikasi)
+- [Installation](#-installation)
+- [Environment Setup](#-environment-setup)
+- [Running the Application](#-running-the-application)
 - [Database Schema](#-database-schema)
 - [API Endpoints](#-api-endpoints)
-- [Middleware](#-middleware)
 - [Error Handling](#-error-handling)
 - [Pagination](#-pagination)
+- [Contributing](#-contributing)
+- [License](#-license)
+- [Author](#-author)
 
-## 🛠 Teknologi yang Digunakan
+## 🛠 Tech Stack
 
 - **Node.js** - Runtime environment
 - **Express.js** - Web framework
@@ -25,85 +28,86 @@ REST API backend untuk aplikasi Inventory System yang dibangun dengan Node.js, E
 - **JWT** - Authentication
 - **Bcrypt** - Password hashing
 - **Joi** - Input validation
-- **Faker** - Generate dummy data
+- **Faker** - Dummy data seeding
 
-## ✨ Fitur Utama
+## ✨ Features
 
 - 🔐 Authentication & Authorization (JWT-based)
 - 👥 User Management (Admin & User roles)
-- 📊 Category Management
 - 📦 Product Management
+- 🏷️ Category Management
 - 🛒 Order Management
-- 📄 Pagination Support
-- ✅ Input Validation
+- 📄 Pagination on List Endpoints
+- 🧩 Centralized Validation & Error Handling
 - 🔒 Role-based Access Control
+
+## 📁 Project Structure
+
+```bash
+src/
+│── config/
+│── controllers/
+│── middlewares/
+│── routes/
+│── services/
+│── validations/
+│── prisma/
+│── utils/
+index.js
+```
 
 ## 📦 Prerequisites
 
-Pastikan Anda sudah menginstall:
+Ensure you have installed::
 
-- **Node.js** (v14 atau lebih tinggi)
-- **MySQL** (v5.7 atau lebih tinggi)
-- **npm** atau **yarn**
+- Node.js v14+
+- MySQL 5.7+
+- npm or yarn
 
-## 🚀 Instalasi
+## 🚀 Installation
 
-1. Clone repository:
 ```bash
 git clone https://github.com/asqirahmadani/inventory-system.git
 cd inventory-system
-```
-
-2. Install dependencies:
-```bash
 npm install
 ```
 
-3. Setup database:
-```bash
-# Generate Prisma Client
-npx prisma generate
+## ⚙️ Environment Setup
 
-# Run migrations
-npx prisma migrate dev
-
-# (Optional) Seed database dengan dummy data
-npx prisma db seed
-```
-
-## ⚙️ Konfigurasi
-
-Buat file `.env` di root project dan isi dengan konfigurasi berikut:
+Create a `.env` file:
 
 ```env
-# Database
 DATABASE_URL="mysql://username:password@localhost:3306/inventory_db"
-
-# JWT
-JWT_SECRET="your-secret-key-here"
+JWT_SECRET="your-secret-key"
 JWT_ACCESS_EXPIRATION_MINUTES=30
 JWT_REFRESH_EXPIRATION_DAYS=30
-
-# Application
 PORT=3000
 NODE_ENV=development
 ```
 
-## 🎯 Menjalankan Aplikasi
+## 🗄️ Database Setup
 
-### Development Mode
+```bash
+npx prisma generate
+npx prisma migrate dev
+npx prisma db seed   # optional
+```
+
+## 🎯 Running the Application
+
+### Development
 ```bash
 npm run dev
 ```
 
-### Production Mode
+### Production
 ```bash
 npm start
 ```
 
-API akan berjalan di `http://localhost:3000` (atau sesuai PORT di `.env`)
+API available on `http://localhost:3000`
 
-## 📊 Database Schema
+## 🧬 Database Schema
 
 ### User
 ```prisma
@@ -241,25 +245,9 @@ Base URL: `http://localhost:3000/v1`
 | PATCH | `/order-items/:orderItemId` | Update order item | Admin |
 | DELETE | `/order-items/:orderItemId` | Delete order item | Admin |
 
-## 🛡️ Middleware
-
-### Authentication Middleware
-Mengecek validitas JWT token dan hak akses berdasarkan role.
-
-```javascript
-router.get('/users', auth('admin'), userController.getAllUsers);
-```
-
-### Validation Middleware
-Validasi input menggunakan Joi schema.
-
-```javascript
-router.post('/products', validate(productValidation.createProduct), productController.createProduct);
-```
-
 ## ⚠️ Error Handling
 
-Semua error akan ditangani dengan `ApiError` class dan error handler middleware. Format error response:
+Consistent error responses via `ApiError`:
 
 ```json
 {
@@ -268,83 +256,16 @@ Semua error akan ditangani dengan `ApiError` class dan error handler middleware.
 }
 ```
 
-### Common Error Codes
-- `400` - Bad Request (invalid input, duplicate data)
-- `401` - Unauthorized (invalid token, insufficient permission)
-- `404` - Not Found (resource tidak ditemukan)
-- `500` - Internal Server Error
-
 ## 📄 Pagination
-
-Semua endpoint GET dengan suffix `/pagination` mendukung query parameters:
-
-- `page` - Nomor halaman (default: 1)
-- `limit` - Jumlah item per halaman (default: 10)
 
 **Example:**
 ```
 GET /v1/products/pagination?page=2&limit=10
 ```
 
-**Response:**
-```json
-{
-  "status": 200,
-  "message": "Get products success",
-  "data": {
-    "products": [...],
-    "pagination": {
-      "currentPage": 2,
-      "totalPages": 5,
-      "totalItems": 50,
-      "hasNextPage": true,
-      "hasPrevPage": true
-    }
-  }
-}
-```
-
-## 📝 Example Requests
-
-### Register
-```bash
-curl -X POST http://localhost:3000/v1/auth/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "name": "John Doe",
-    "email": "john@example.com",
-    "password": "password123"
-  }'
-```
-
-### Login
-```bash
-curl -X POST http://localhost:3000/v1/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "email": "john@example.com",
-    "password": "password123"
-  }'
-```
-
-### Create Product
-```bash
-curl -X POST http://localhost:3000/v1/products \
-  -H "Content-Type: application/json" \
-  -H "Authorization: Bearer YOUR_ACCESS_TOKEN" \
-  -d '{
-    "name": "Laptop",
-    "description": "Gaming Laptop",
-    "price": 15000000,
-    "quantityInStock": 10,
-    "categoryId": "uuid-category",
-    "userId": "uuid-user"
-  }'
-```
-
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Pull requests are welcome.
 
 ## 📄 License
 
@@ -354,7 +275,3 @@ This project is licensed under the MIT License.
 
 **Asqi Rahmadani**
 - GitHub: [@asqirahmadani](https://github.com/asqirahmadani)
-
-## 📞 Support
-
-Jika ada pertanyaan atau issue, silakan buat issue baru di [GitHub Issues](https://github.com/asqirahmadani/inventory-system/issues).
